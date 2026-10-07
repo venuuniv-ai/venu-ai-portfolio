@@ -3533,3 +3533,24 @@ body {
     font-size: 9px;
   }
 }
+/* Contact email copy action */
+
+.contact-copy-button {
+  font-family: monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  background: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.contact-copy-button:hover {
+  border-color: #b7ff42;
+  color: #b7ff42;
+}
+
+.contact-copy-button:focus-visible {
+  outline: 1px solid #b7ff42;
+  outline-offset: 3px;
+}

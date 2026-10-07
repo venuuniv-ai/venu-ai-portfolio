@@ -1,7 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Download, Mail } from "lucide-react";
+import { ArrowUpRight, Check, Copy, Download, Mail } from "lucide-react";
+
+const EMAIL = "thummetivenumadhavreddy@gmail.com";
 
 const roles = [
   "AI/ML ENGINEER",
@@ -24,15 +27,29 @@ function LinkedInIcon() {
       aria-hidden="true"
     >
       <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z" />
-
       <rect width="4" height="12" x="2" y="9" />
-
       <circle cx="4" cy="4" r="2" />
     </svg>
   );
 }
 
 export default function Contact() {
+  const [copied, setCopied] = useState(false);
+
+  async function copyEmail() {
+    try {
+      await navigator.clipboard.writeText(EMAIL);
+
+      setCopied(true);
+
+      window.setTimeout(() => {
+        setCopied(false);
+      }, 1800);
+    } catch {
+      window.location.href = `mailto:${EMAIL}`;
+    }
+  }
+
   return (
     <section className="contact-section" id="contact">
       <div className="contact-inner">
@@ -104,13 +121,21 @@ export default function Contact() {
             <Download size={17} />
           </a>
 
-          <a
-            className="contact-secondary"
-            href="mailto:thummetivenumadhavreddy@gmail.com"
-          >
+          <a className="contact-secondary" href={`mailto:${EMAIL}`}>
             EMAIL ME
             <Mail size={17} />
           </a>
+
+          <button
+            type="button"
+            className="contact-secondary contact-copy-button"
+            onClick={copyEmail}
+            aria-label="Copy email address"
+          >
+            {copied ? "EMAIL COPIED" : "COPY EMAIL"}
+
+            {copied ? <Check size={17} /> : <Copy size={17} />}
+          </button>
 
           <a
             className="contact-secondary"

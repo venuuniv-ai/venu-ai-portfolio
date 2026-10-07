@@ -162,7 +162,7 @@ export default function AskVenu() {
 
             <strong>
               <Database size={14} />
-              VECTOR INDEX READY
+              KNOWLEDGE INDEX READY
             </strong>
           </div>
 
@@ -198,7 +198,7 @@ export default function AskVenu() {
 
                 <p>
                   <span />
-                  EMBEDDING RETRIEVAL
+                  INTENT-AWARE RETRIEVAL
                 </p>
               </div>
             </aside>
@@ -207,7 +207,7 @@ export default function AskVenu() {
               <div className="ask-conversation-top">
                 <span>SESSION / PORTFOLIO QUERY</span>
 
-                <span>GROUNDING / SEMANTIC EVIDENCE</span>
+                <span>GROUNDING / RETRIEVED EVIDENCE</span>
               </div>
 
               <div className="ask-messages">
