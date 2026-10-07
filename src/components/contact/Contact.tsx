@@ -140,6 +140,16 @@ export default function Contact() {
             LinkedIn
             <LinkedInIcon />
           </a>
+
+          <a
+            className="contact-secondary"
+            href="https://github.com/venuuniv-ai"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub
+            <ArrowUpRight size={17} aria-hidden="true" />
+          </a>
         </div>
 
         <footer className="contact-footer">
