@@ -139,8 +139,7 @@ export async function POST(request: NextRequest) {
         answer,
         sources,
 
-        retrieval: "hybrid-semantic",
-
+        retrieval: "hybrid-intent-lexical",
         generation,
 
         grounding:

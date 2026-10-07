@@ -1,5 +1,3 @@
-import { pipeline } from "@huggingface/transformers";
-
 import {
   portfolioKnowledge,
   type KnowledgeDocument,
@@ -10,18 +8,6 @@ export type RankedSemanticDocument = KnowledgeDocument & {
   semanticScore: number;
   lexicalScore: number;
 };
-
-type EmbeddingOutput = {
-  data: Float32Array | number[];
-};
-
-type FeatureExtractor = (
-  text: string,
-  options: {
-    pooling: "mean";
-    normalize: boolean;
-  }
-) => Promise<EmbeddingOutput>;
 
 type QueryIntent = {
   professional: boolean;
@@ -34,10 +20,6 @@ type QueryIntent = {
   agentic: boolean;
   company?: string;
 };
-
-let extractorPromise: Promise<FeatureExtractor> | null = null;
-
-let portfolioEmbeddingPromise: Promise<number[][]> | null = null;
 
 const stopWords = new Set([
   "a",
@@ -260,52 +242,6 @@ function expandQuery(query: string) {
   return expansions.join(". ");
 }
 
-async function getExtractor(): Promise<FeatureExtractor> {
-  if (!extractorPromise) {
-    extractorPromise = pipeline(
-      "feature-extraction",
-      "Xenova/all-MiniLM-L6-v2"
-    ).then((extractor) => extractor as unknown as FeatureExtractor);
-  }
-
-  return extractorPromise;
-}
-
-async function createEmbedding(text: string): Promise<number[]> {
-  const extractor = await getExtractor();
-
-  const output = await extractor(text, {
-    pooling: "mean",
-    normalize: true,
-  });
-
-  return Array.from(output.data);
-}
-
-function cosineSimilarity(first: number[], second: number[]) {
-  if (first.length !== second.length || first.length === 0) {
-    return 0;
-  }
-
-  let dotProduct = 0;
-  let firstMagnitude = 0;
-  let secondMagnitude = 0;
-
-  for (let index = 0; index < first.length; index++) {
-    dotProduct += first[index] * second[index];
-
-    firstMagnitude += first[index] * first[index];
-
-    secondMagnitude += second[index] * second[index];
-  }
-
-  if (firstMagnitude === 0 || secondMagnitude === 0) {
-    return 0;
-  }
-
-  return dotProduct / (Math.sqrt(firstMagnitude) * Math.sqrt(secondMagnitude));
-}
-
 function lexicalSimilarity(query: string, document: KnowledgeDocument) {
   const queryTokens = tokenize(query);
 
@@ -342,6 +278,54 @@ function lexicalSimilarity(query: string, document: KnowledgeDocument) {
   return Math.min(score / maximumPossibleScore, 1);
 }
 
+function phraseSimilarity(query: string, document: KnowledgeDocument) {
+  const normalizedQuery = normalize(query);
+
+  const combined = normalize(
+    `${document.title} ${document.content} ${document.keywords.join(" ")}`
+  );
+
+  let score = 0;
+
+  const importantPhrases = [
+    "multimodal",
+    "generative ai",
+    "large language model",
+    "llm",
+    "rag",
+    "retrieval",
+    "agentic",
+    "agent",
+    "langgraph",
+    "faiss",
+    "inference",
+    "infrastructure",
+    "distributed",
+    "deployment",
+    "production",
+    "qualcomm",
+    "perplexity",
+    "accenture",
+    "camera",
+    "radar",
+    "lidar",
+    "computer vision",
+    "edge ai",
+    "vllm",
+    "triton",
+    "docker",
+    "kubernetes",
+  ];
+
+  for (const phrase of importantPhrases) {
+    if (normalizedQuery.includes(phrase) && combined.includes(phrase)) {
+      score += 0.08;
+    }
+  }
+
+  return Math.min(score, 0.4);
+}
+
 function getIntentBoost(query: string, document: KnowledgeDocument) {
   const intent = detectIntent(query);
 
@@ -352,35 +336,21 @@ function getIntentBoost(query: string, document: KnowledgeDocument) {
 
   let boost = 0;
 
-  /*
-   * Direct employer questions should strongly
-   * prioritize actual experience chunks.
-   */
   if (intent.company) {
     if (document.source === "EXPERIENCE" && combined.includes(intent.company)) {
-      boost += 0.22;
+      boost += 0.34;
     } else if (combined.includes(intent.company)) {
-      boost += 0.08;
+      boost += 0.1;
     }
   }
 
-  /*
-   * Professional-experience questions should
-   * favor EXPERIENCE over generic profile,
-   * skill, or project summaries.
-   */
   if (intent.professional && document.source === "EXPERIENCE") {
-    boost += 0.1;
+    boost += 0.12;
   }
 
-  /*
-   * Multimodal experience should surface
-   * Qualcomm professional evidence as well
-   * as the independent multimodal project.
-   */
   if (intent.multimodal) {
     if (document.source === "EXPERIENCE" && combined.includes("qualcomm")) {
-      boost += 0.14;
+      boost += 0.2;
     }
 
     if (
@@ -390,17 +360,13 @@ function getIntentBoost(query: string, document: KnowledgeDocument) {
       combined.includes("lidar") ||
       combined.includes("perception")
     ) {
-      boost += 0.05;
+      boost += 0.08;
     }
   }
 
-  /*
-   * LLM / GenAI experience should prioritize
-   * Perplexity professional evidence.
-   */
   if (intent.generativeAI) {
     if (document.source === "EXPERIENCE" && combined.includes("perplexity")) {
-      boost += 0.14;
+      boost += 0.2;
     }
 
     if (
@@ -408,12 +374,12 @@ function getIntentBoost(query: string, document: KnowledgeDocument) {
       combined.includes("generative ai") ||
       combined.includes("llm")
     ) {
-      boost += 0.04;
+      boost += 0.07;
     }
   }
 
   if (intent.infrastructure && document.source === "EXPERIENCE") {
-    boost += 0.06;
+    boost += 0.09;
   }
 
   if (
@@ -422,41 +388,25 @@ function getIntentBoost(query: string, document: KnowledgeDocument) {
       combined.includes("retrieval") ||
       combined.includes("faiss"))
   ) {
-    boost += 0.04;
+    boost += 0.08;
   }
 
   if (
     intent.agentic &&
     (combined.includes("langgraph") || combined.includes("agent"))
   ) {
-    boost += 0.04;
+    boost += 0.08;
   }
 
   if (intent.project && document.source === "PROJECT") {
-    boost += 0.04;
+    boost += 0.06;
   }
 
   if (intent.skills && document.source === "SKILLS") {
-    boost += 0.05;
+    boost += 0.07;
   }
 
   return boost;
-}
-
-function getPortfolioEmbeddingText(document: KnowledgeDocument) {
-  return `${document.title}. ${document.content}`;
-}
-
-async function getPortfolioEmbeddings() {
-  if (!portfolioEmbeddingPromise) {
-    portfolioEmbeddingPromise = Promise.all(
-      portfolioKnowledge.map((document) =>
-        createEmbedding(getPortfolioEmbeddingText(document))
-      )
-    );
-  }
-
-  return portfolioEmbeddingPromise;
 }
 
 function diversifyResults(ranked: RankedSemanticDocument[], limit: number) {
@@ -468,9 +418,6 @@ function diversifyResults(ranked: RankedSemanticDocument[], limit: number) {
 
   const selectedIds = new Set<string>();
 
-  /*
-   * Keep the strongest overall result.
-   */
   const first = ranked[0];
 
   if (first) {
@@ -478,11 +425,6 @@ function diversifyResults(ranked: RankedSemanticDocument[], limit: number) {
     selectedIds.add(first.id);
   }
 
-  /*
-   * Add strong evidence from different source
-   * categories so the LLM receives professional
-   * experience + projects + skills when relevant.
-   */
   const sourcePriority: KnowledgeDocument["source"][] = [
     "EXPERIENCE",
     "PROJECT",
@@ -509,9 +451,6 @@ function diversifyResults(ranked: RankedSemanticDocument[], limit: number) {
     }
   }
 
-  /*
-   * Fill remaining slots using overall score.
-   */
   for (const document of ranked) {
     if (selected.length >= limit) {
       break;
@@ -523,9 +462,6 @@ function diversifyResults(ranked: RankedSemanticDocument[], limit: number) {
     }
   }
 
-  /*
-   * Preserve final relevance ordering.
-   */
   return selected.sort(
     (firstDocument, secondDocument) =>
       secondDocument.score - firstDocument.score
@@ -544,36 +480,19 @@ export async function searchPortfolioSemantically(
 
   const expandedQuery = expandQuery(trimmedQuery);
 
-  const [queryEmbedding, portfolioEmbeddings] = await Promise.all([
-    createEmbedding(expandedQuery),
-    getPortfolioEmbeddings(),
-  ]);
-
-  const ranked = portfolioKnowledge.map((document, index) => {
-    const semanticScore = cosineSimilarity(
-      queryEmbedding,
-      portfolioEmbeddings[index]
-    );
-
+  const ranked = portfolioKnowledge.map((document) => {
     const lexicalScore = lexicalSimilarity(expandedQuery, document);
+
+    const phraseScore = phraseSimilarity(trimmedQuery, document);
 
     const intentBoost = getIntentBoost(trimmedQuery, document);
 
-    /*
-     * Base relevance remains primarily
-     * semantic. Lexical matching improves
-     * technical precision, while a bounded
-     * intent boost helps surface the correct
-     * professional evidence.
-     */
-    const baseScore = semanticScore * 0.7 + lexicalScore * 0.3;
-
-    const score = baseScore + intentBoost;
+    const score = lexicalScore * 0.65 + phraseScore + intentBoost;
 
     return {
       ...document,
       score,
-      semanticScore,
+      semanticScore: 0,
       lexicalScore,
     };
   });
