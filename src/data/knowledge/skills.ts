@@ -1,0 +1,121 @@
+export const skills = {
+  programming: ["Python", "SQL", "TypeScript", "JavaScript", "Bash"],
+
+  generativeAI: [
+    "Generative AI",
+    "Large Language Models",
+    "RAG",
+    "Agentic AI",
+    "AI Agents",
+    "LangGraph",
+    "Prompt Engineering",
+    "Few-Shot Learning",
+    "Fine-Tuning",
+    "Model Evaluation",
+    "Grounding",
+    "Citation Validation",
+    "AI Guardrails",
+  ],
+
+  machineLearning: [
+    "Machine Learning",
+    "Deep Learning",
+    "Supervised Learning",
+    "Unsupervised Learning",
+    "Multimodal AI",
+    "Natural Language Processing",
+    "Computer Vision",
+    "Feature Engineering",
+    "Model Optimization",
+    "Active Learning",
+  ],
+
+  frameworks: [
+    "PyTorch",
+    "TensorFlow",
+    "Scikit-learn",
+    "Hugging Face Transformers",
+    "Hugging Face Datasets",
+    "DeepSpeed",
+    "OpenCV",
+  ],
+
+  retrieval: [
+    "FAISS",
+    "Vector Search",
+    "Semantic Search",
+    "Text Embeddings",
+    "CLIP",
+    "Reranking",
+    "Reciprocal Rank Fusion",
+    "Top-K Retrieval",
+  ],
+
+  inference: [
+    "ONNX",
+    "CUDA",
+    "TensorRT",
+    "TensorRT-LLM",
+    "vLLM",
+    "Triton Inference Server",
+    "Quantization",
+    "Continuous Batching",
+    "KV Caching",
+  ],
+
+  mlops: [
+    "MLflow",
+    "DVC",
+    "Apache Airflow",
+    "Model Versioning",
+    "Experiment Tracking",
+    "CI/CD",
+    "GitHub Actions",
+    "Azure DevOps",
+    "Prometheus",
+    "Sentry",
+  ],
+
+  cloudInfrastructure: [
+    "AWS",
+    "EC2",
+    "S3",
+    "SageMaker",
+    "Microsoft Azure",
+    "Databricks",
+    "Delta Lake",
+    "Docker",
+    "Kubernetes",
+  ],
+
+  backend: ["FastAPI", "Flask", "Node.js", "REST APIs", "Microservices"],
+
+  data: [
+    "PostgreSQL",
+    "MongoDB",
+    "ETL",
+    "Data Preprocessing",
+    "Dataset Orchestration",
+    "Real-Time Data Processing",
+  ],
+
+  frontend: [
+    "React",
+    "Next.js",
+    "TypeScript",
+    "Tailwind CSS",
+    "Streamlit",
+    "Power BI",
+  ],
+
+  engineering: [
+    "Distributed Systems",
+    "Distributed Training",
+    "Model Deployment",
+    "Production ML",
+    "ML System Design",
+    "AI System Evaluation",
+    "Observability",
+    "Cloud Deployment",
+  ],
+} as const;
