@@ -55,9 +55,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const body = await request.json();
+    let body: unknown;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json({ error: "Please send a valid JSON request." }, { status: 400 });
+    }
 
-    const query = typeof body.query === "string" ? body.query.trim() : "";
+    const query =
+      body && typeof body === "object" && "query" in body && typeof body.query === "string"
+        ? body.query.trim()
+        : "";
 
     if (!query) {
       return NextResponse.json(

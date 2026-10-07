@@ -98,7 +98,7 @@ function detectIntent(query: string): QueryIntent {
 
   return {
     professional:
-      /\b(experience|career|professional|job|role|roles|company|companies|employer|employment|worked|background|trajectory)\b/.test(
+      /\b(experience|career|professional|job|role|roles|company|companies|employer|employment|worked|background|trajectory)\b|\bwhere\b.*\b(used|use|built|worked)\b/.test(
         normalized
       ),
 

@@ -1,3 +1,4 @@
+import SelectedWork from "@/components/work/SelectedWork";
 import Navigation from "@/components/navigation/Navigation";
 import Hero from "@/components/hero/Hero";
 import ExperienceGraph from "@/components/experience/ExperienceGraph";
@@ -12,6 +13,7 @@ export default function Home() {
     <main id="top">
       <Navigation />
       <Hero />
+      <SelectedWork />
       <ExperienceGraph />
       <SystemArchitecture />
       <AILab />

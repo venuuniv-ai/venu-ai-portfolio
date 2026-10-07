@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Fragment, useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   Activity,
   Search,
@@ -17,38 +17,32 @@ const traceSteps = [
     id: "01",
     name: "QUERY RECEIVED",
     meta: "input / normalized",
-    status: "complete",
   },
   {
     id: "02",
     name: "AGENT ROUTER",
     meta: "intent / retrieval",
-    status: "complete",
   },
   {
     id: "03",
     name: "TEXT RETRIEVAL",
     meta: "faiss / top-k",
-    status: "complete",
   },
   {
     id: "04",
     name: "VISUAL RETRIEVAL",
     meta: "clip / faiss",
-    status: "complete",
   },
-  { id: "05", name: "RANK FUSION", meta: "rrf / rerank", status: "complete" },
+  { id: "05", name: "RANK FUSION", meta: "rrf / rerank" },
   {
     id: "06",
     name: "LLM GENERATION",
     meta: "grounded context",
-    status: "complete",
   },
   {
     id: "07",
     name: "CITATION CHECK",
     meta: "evidence validation",
-    status: "complete",
   },
 ];
 
@@ -57,91 +51,125 @@ const retrievalResults = [
     rank: "01",
     source: "architecture.md",
     type: "TEXT",
-    relevance: "HIGH",
     description: "Independent text and visual retrieval architecture.",
   },
   {
     rank: "02",
     source: "retrieval-design.md",
     type: "TEXT",
-    relevance: "HIGH",
     description: "Rank fusion strategy across heterogeneous retrievers.",
   },
   {
     rank: "03",
     source: "system-diagram.png",
     type: "IMAGE",
-    relevance: "MEDIUM",
     description: "Multimodal system architecture reference.",
   },
   {
     rank: "04",
     source: "evaluation.md",
     type: "TEXT",
-    relevance: "MEDIUM",
     description: "Retrieval evaluation and grounding methodology.",
   },
   {
     rank: "05",
     source: "inference-stack.png",
     type: "IMAGE",
-    relevance: "MEDIUM",
     description: "Inference and serving infrastructure diagram.",
   },
 ];
 
 export default function AILab() {
+  const reducedMotion = useReducedMotion();
+  const traceContainer = useRef<HTMLDivElement>(null);
   const [mode, setMode] = useState<LabMode>("trace");
   const [topK, setTopK] = useState(3);
+  const [traceRun, setTraceRun] = useState(0);
+  const [completedSteps, setCompletedSteps] = useState(0);
+  const [backend, setBackend] = useState("vLLM");
+  const [concurrency, setConcurrency] = useState("1");
+
+  useEffect(() => {
+    const selectDestination = () => {
+      if (window.location.hash === "#inference-bench") setMode("inference");
+    };
+    const frame = window.requestAnimationFrame(selectDestination);
+    window.addEventListener("hashchange", selectDestination);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("hashchange", selectDestination);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (mode !== "trace") return;
+    const timer = window.setInterval(() => {
+      setCompletedSteps((current) => {
+        if (current >= traceSteps.length) {
+          window.clearInterval(timer);
+          return current;
+        }
+        return current + 1;
+      });
+    }, 650);
+    return () => window.clearInterval(timer);
+  }, [mode, traceRun]);
+
+  useEffect(() => {
+    const container = traceContainer.current;
+    const current = container?.querySelector<HTMLElement>(".trace-step.running");
+    if (container && current) {
+      container.scrollTo({ left: Math.max(0, current.offsetLeft - container.offsetLeft - container.clientWidth / 2 + current.offsetWidth / 2), behavior: reducedMotion ? "instant" : "smooth" });
+    }
+  }, [completedSteps, mode, reducedMotion]);
 
   return (
     <section className="lab-section" id="lab">
       <div className="lab-container">
         <div className="lab-header">
           <div>
-            <span className="section-index">04 / AI LAB</span>
-            <h2>
-              INSPECT THE
-              <br />
-              SYSTEM.
-            </h2>
+            <span className="section-index">INTERACTIVE EXPLORATIONS</span>
+            <h2>Explore the <em>AI lab.</em></h2>
           </div>
 
           <p>
-            Interactive views into orchestration, retrieval and inference. Built
-            to expose how the system behaves rather than only describe it.
+            Interactive demonstrations of orchestration and retrieval, plus an
+            inference configuration explorer. Examples are illustrative; performance data awaits measured GPU runs.
           </p>
         </div>
 
-        <div className="lab-shell">
+        <div className="lab-shell" id="inference-bench">
           <div className="lab-tabs">
             <button
               className={mode === "trace" ? "active" : ""}
               onClick={() => setMode("trace")}
+              aria-pressed={mode === "trace"}
             >
-              <Activity size={14} />
-              AGENT TRACE
+              <Activity size={14} aria-hidden="true" />
+              Agent Trace
             </button>
 
             <button
               className={mode === "retrieval" ? "active" : ""}
               onClick={() => setMode("retrieval")}
+              aria-pressed={mode === "retrieval"}
             >
-              <Search size={14} />
-              RETRIEVAL EXPLORER
+              <Search size={14} aria-hidden="true" />
+              Retrieval Explorer
             </button>
 
             <button
               className={mode === "inference" ? "active" : ""}
               onClick={() => setMode("inference")}
+              aria-pressed={mode === "inference"}
             >
-              <Gauge size={14} />
-              INFERENCE BENCH
+              <Gauge size={14} aria-hidden="true" />
+              Inference Bench
             </button>
 
             <span className="lab-status">
               <i />
-              LAB ONLINE
+              ILLUSTRATIVE DEMO
             </span>
           </div>
 
@@ -156,14 +184,18 @@ export default function AILab() {
               >
                 <div className="lab-panel-header">
                   <div>
-                    <span>EXECUTION / TRACE_001</span>
+                    <span>ILLUSTRATIVE / TRACE_001</span>
                     <h3>AGENT EXECUTION TRACE</h3>
                   </div>
 
                   <span className="trace-complete">
-                    <CheckCircle2 size={13} />
-                    COMPLETE
+                    {completedSteps === traceSteps.length ? <CheckCircle2 size={13} aria-hidden="true" /> : <Activity size={13} aria-hidden="true" />}
+                    {completedSteps === traceSteps.length ? "DEMO COMPLETE" : "DEMO RUNNING"}
                   </span>
+                  <button className="lab-replay" type="button" onClick={() => {
+                    setCompletedSteps(0);
+                    setTraceRun((current) => current + 1);
+                  }}>REPLAY TRACE</button>
                 </div>
 
                 <div className="trace-query">
@@ -174,32 +206,39 @@ export default function AILab() {
                   </p>
                 </div>
 
-                <div className="trace-flow">
-                  {traceSteps.map((step, index) => (
-                    <div className="trace-step" key={step.id}>
-                      <div className="trace-step-top">
-                        <span>{step.id}</span>
-                        <CheckCircle2 size={13} />
-                      </div>
-
-                      <strong>{step.name}</strong>
-                      <small>{step.meta}</small>
-
-                      {index < traceSteps.length - 1 && (
-                        <ArrowRight className="trace-arrow" size={14} />
-                      )}
-                    </div>
-                  ))}
+                <div className="trace-scroll" ref={traceContainer} tabIndex={0} role="region" aria-label="Execution trace; scroll to inspect stages">
+                  <div className="trace-flow">
+                    {traceSteps.map((step, index) => {
+                      const state = index < completedSteps ? "complete" : index === completedSteps ? "running" : "waiting";
+                      return (
+                        <Fragment key={step.id}>
+                          <div className={`trace-step ${state}`} aria-current={state === "running" ? "step" : undefined}>
+                            <div className="trace-step-top">
+                              <span>{step.id}</span>
+                              <span>{state === "complete" ? "DONE" : state === "running" ? "RUNNING" : "WAITING"}</span>
+                            </div>
+                            <strong>{step.name}</strong>
+                            <small>{step.meta}</small>
+                          </div>
+                          {index < traceSteps.length - 1 && (
+                            <div className={`trace-connector ${index < completedSteps - 1 ? "complete" : index === completedSteps - 1 ? "running" : "pending"}`} aria-hidden="true">
+                              <ArrowRight size={16} aria-hidden="true" />
+                            </div>
+                          )}
+                        </Fragment>
+                      );
+                    })}
+                  </div>
                 </div>
 
-                <div className="trace-output">
-                  <span>OUTPUT / GROUNDED RESPONSE</span>
-                  <p>
-                    Text and visual evidence are retrieved independently, ranked
-                    within their respective embedding spaces, and combined using
-                    rank fusion before grounded generation.
-                  </p>
-                </div>
+                <AnimatePresence>
+                  {completedSteps === traceSteps.length && (
+                    <motion.div className="trace-output" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: reducedMotion ? 0 : 0.2 }}>
+                      <span>ILLUSTRATIVE OUTPUT</span>
+                      <p>Text and visual evidence are retrieved independently, ranked within their respective embedding spaces, and combined using rank fusion before grounded generation.</p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
             )}
 
@@ -213,7 +252,7 @@ export default function AILab() {
               >
                 <div className="lab-panel-header">
                   <div>
-                    <span>VECTOR SEARCH / EXPLORER</span>
+                    <span>ILLUSTRATIVE RESULTS / EXPLORER</span>
                     <h3>RETRIEVAL EXPLORER</h3>
                   </div>
 
@@ -225,6 +264,7 @@ export default function AILab() {
                         key={value}
                         className={topK === value ? "active" : ""}
                         onClick={() => setTopK(value)}
+                        aria-pressed={topK === value}
                       >
                         {value}
                       </button>
@@ -239,9 +279,10 @@ export default function AILab() {
                   </strong>
                 </div>
 
-                <div className="retrieval-results">
+                <div className="retrieval-results" aria-live="polite">
+                  <AnimatePresence initial={false}>
                   {retrievalResults.slice(0, topK).map((result) => (
-                    <div className="retrieval-result" key={result.rank}>
+                    <motion.div layout={!reducedMotion} className="retrieval-result" key={result.rank} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reducedMotion ? 0 : 0.15 }}>
                       <span className="result-rank">{result.rank}</span>
 
                       <div>
@@ -252,10 +293,11 @@ export default function AILab() {
                       <span className="result-type">{result.type}</span>
 
                       <span className="result-relevance">
-                        {result.relevance}
+                        EXAMPLE
                       </span>
-                    </div>
+                    </motion.div>
                   ))}
+                  </AnimatePresence>
                 </div>
               </motion.div>
             )}
@@ -287,7 +329,9 @@ export default function AILab() {
 
                   <div className="benchmark-config">
                     <span>BACKEND</span>
-                    <strong>vLLM / TRT-LLM / TRITON</strong>
+                    <select aria-label="Inference backend" value={backend} onChange={(event) => setBackend(event.target.value)}>
+                      {["vLLM", "TRT-LLM", "TRITON"].map((value) => <option key={value}>{value}</option>)}
+                    </select>
                   </div>
 
                   <div className="benchmark-config">
@@ -297,7 +341,9 @@ export default function AILab() {
 
                   <div className="benchmark-config">
                     <span>CONCURRENCY</span>
-                    <strong>1 / 10 / 25 / 50 / 100</strong>
+                    <select aria-label="Inference concurrency" value={concurrency} onChange={(event) => setConcurrency(event.target.value)}>
+                      {["1", "10", "25", "50", "100"].map((value) => <option key={value}>{value}</option>)}
+                    </select>
                   </div>
                 </div>
 
@@ -319,8 +365,7 @@ export default function AILab() {
                 </div>
 
                 <div className="benchmark-note">
-                  No synthetic performance claims. Metrics will populate from
-                  reproducible GPU benchmark runs.
+                  Selected configuration: {backend}, concurrency {concurrency}. No GPU run has been executed. Metrics remain unavailable until a reproducible measured run is connected.
                 </div>
               </motion.div>
             )}

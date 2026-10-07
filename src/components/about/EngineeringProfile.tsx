@@ -126,14 +126,10 @@ export default function EngineeringProfile() {
         >
           <div>
             <p className="engineering-profile-kicker">
-              06 / ENGINEERING PROFILE
+              TOOLS & ENGINEERING APPROACH
             </p>
 
-            <h2 className="engineering-profile-title">
-              BUILT ACROSS THE
-              <br />
-              <span>AI SYSTEM STACK.</span>
-            </h2>
+            <h2 className="engineering-profile-title">Across the <em>AI system stack.</em></h2>
           </div>
 
           <div className="engineering-profile-summary">
@@ -145,16 +141,17 @@ export default function EngineeringProfile() {
 
             <div className="engineering-profile-signal">
               <span />
-              SYSTEMS / MODELS / INFRA
+              TOOLS / MODELS / INFRA
             </div>
           </div>
         </motion.div>
 
-        <div className="engineering-stack-grid">
+        <div className="engineering-stack-grid" id="engineering-stack">
           {stackGroups.map((group, index) => (
             <motion.article
               className="engineering-stack-card"
               key={group.title}
+              id={group.title === "ML INFRASTRUCTURE" ? "ml-infrastructure" : undefined}
               initial={{
                 opacity: 0,
                 y: 20,
@@ -176,7 +173,7 @@ export default function EngineeringProfile() {
                 <span>{group.number}</span>
 
                 <span>
-                  {group.items.length.toString().padStart(2, "0")} SYSTEMS
+                  {group.items.length.toString().padStart(2, "0")} TOOLS
                 </span>
               </div>
 
@@ -240,11 +237,11 @@ export default function EngineeringProfile() {
                 key={principle.title}
                 initial={{
                   opacity: 0,
-                  x: 20,
+                  y: 20,
                 }}
                 whileInView={{
                   opacity: 1,
-                  x: 0,
+                  y: 0,
                 }}
                 viewport={{
                   once: true,

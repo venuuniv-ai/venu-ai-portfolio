@@ -31,6 +31,17 @@ export function generateGroundedAnswer(
     );
   }
 
+  const professionalQuestion = /\b(experience|career|trajectory|worked)\b|\bwhere\b.*\b(used|use|built|worked)\b/i.test(query);
+  if (professionalQuestion) {
+    const experience = results.filter((result) => result.source === "EXPERIENCE");
+    if (experience.length > 0) {
+      const project = results.find((result) => result.source === "PROJECT" && result.id.endsWith("-overview"));
+      const evidence = experience.slice(0, 3);
+      if (project && /\brag\b/i.test(query)) evidence.push(project);
+      return evidence.map((result) => `${result.title}: ${ensureEnding(result.content)}`).join("\n\n");
+    }
+  }
+
   const primary = results[0];
   const evidence = ensureEnding(primary.content);
 

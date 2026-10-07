@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
-const experiences = [
+const careerHistory = [
   {
     id: "01",
     period: "2021 — 2022",
@@ -35,94 +35,22 @@ const experiences = [
       "Engineering production AI systems across LLMs, retrieval, agentic workflows, inference, evaluation and AI-powered applications.",
     stack: ["LLMS", "RAG", "LANGGRAPH", "VLLM", "PYTORCH"],
   },
-  {
-    id: "04",
-    period: "CURRENT SYSTEM",
-    company: "VENU.OS",
-    role: "AI SYSTEMS PORTFOLIO",
-    focus: "Production AI Engineering",
-    description:
-      "An interactive engineering environment for exploring AI architectures, retrieval systems, agent traces and inference infrastructure.",
-    stack: ["NEXT.JS", "FASTAPI", "RAG", "AGENTS", "ML INFRA"],
-  },
+
 ];
 
+const experiences = [careerHistory[2], careerHistory[1], careerHistory[0]];
+
 export default function ExperienceGraph() {
-  const [active, setActive] = useState(2);
-
+  const reduced = useReducedMotion();
+  const [active, setActive] = useState(0);
   const experience = experiences[active];
-
   return (
-    <section className="experience-section">
+    <section className="experience-section" id="experience">
       <div className="experience-container">
-        <div className="section-header">
-          <div>
-            <span className="section-index">02 / SYSTEM HISTORY</span>
-            <h2>
-              ENGINEERING
-              <br />
-              TRAJECTORY
-            </h2>
-          </div>
-
-          <p>
-            From software engineering to applied machine learning, multimodal AI
-            and production LLM systems.
-          </p>
-        </div>
-
-        <div className="experience-interface">
-          <div className="experience-list">
-            {experiences.map((item, index) => (
-              <motion.button
-                key={item.id}
-                className={`experience-node ${
-                  active === index ? "active" : ""
-                }`}
-                onClick={() => setActive(index)}
-                whileHover={{ x: 4 }}
-                transition={{ duration: 0.15 }}
-              >
-                <span className="node-id">{item.id}</span>
-
-                <div>
-                  <span className="node-period">{item.period}</span>
-                  <strong>{item.company}</strong>
-                  <span className="node-focus">{item.focus}</span>
-                </div>
-
-                <ArrowUpRight size={16} />
-              </motion.button>
-            ))}
-          </div>
-
-          <motion.div
-            key={experience.id}
-            className="experience-detail"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25 }}
-          >
-            <div className="detail-top">
-              <span>{experience.id} / ACTIVE NODE</span>
-              <span>{experience.period}</span>
-            </div>
-
-            <h3>{experience.company}</h3>
-
-            <div className="detail-role">{experience.role}</div>
-
-            <p>{experience.description}</p>
-
-            <div className="stack-label">SYSTEM STACK</div>
-
-            <div className="stack-list">
-              {experience.stack.map((skill) => (
-                <span key={skill}>{skill}</span>
-              ))}
-            </div>
-          </motion.div>
-        </div>
+        <div className="editorial-heading"><div><span className="section-index">EXPERIENCE</span><h2>Different contexts.<br /><em>A sharper perspective.</em></h2></div><p>From applied machine learning to multimodal and generative AI. Select a role to explore the work.</p></div>
+        <div className="role-cards" role="group" aria-label="Explore professional experience">{experiences.map((item, index) => <button key={item.id} type="button" className={`role-card ${active === index ? "active" : ""}`} onClick={() => setActive(index)} aria-pressed={active === index} aria-controls="experience-detail"><span className="role-period">{item.period}</span><strong>{item.company.charAt(0) + item.company.slice(1).toLowerCase()}</strong><span>{item.focus}</span><span className="role-card-action">{active === index ? "Selected role" : "Explore this role"}<ArrowUpRight size={15} aria-hidden="true" /></span></button>)}</div>
+        <div className="role-detail-shell" id="experience-detail" aria-live="polite"><motion.div key={experience.id} className="role-detail" initial={{ opacity: 0, y: reduced ? 0 : 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduced ? 0 : 0.2 }}><div><span className="section-index">{experience.period}</span><h3>{experience.role}</h3><p>{experience.description}</p></div><div className="role-technologies"><span className="section-index">TOOLS & TECHNOLOGIES</span><div className="project-tags">{experience.stack.map((skill) => <span key={skill}>{skill}</span>)}</div></div></motion.div></div>
+        <a className="experience-current" href="#work">VENU.OS · Current independent work <ArrowUpRight size={16} aria-hidden="true" /></a>
       </div>
     </section>
   );

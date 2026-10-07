@@ -69,20 +69,14 @@ export default function Contact() {
             duration: 0.6,
           }}
         >
-          <p className="contact-kicker">07 / CONNECT</p>
+          <p className="contact-kicker">GET IN TOUCH</p>
 
           <div className="contact-availability">
             <span className="contact-dot" />
             OPEN TO AI ENGINEERING OPPORTUNITIES
           </div>
 
-          <h2 className="contact-title">
-            BUILDING
-            <br />
-            WHAT&apos;S
-            <br />
-            <span>NEXT.</span>
-          </h2>
+          <h2 className="contact-title">Let’s build something <em>useful.</em></h2>
 
           <p className="contact-description">
             Interested in building reliable, scalable AI systems — from
@@ -108,8 +102,8 @@ export default function Contact() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            VIEW RESUME
-            <ArrowUpRight size={18} />
+            View resume
+            <ArrowUpRight size={18} aria-hidden="true" />
           </a>
 
           <a
@@ -117,13 +111,13 @@ export default function Contact() {
             href="/resume/VenuMadhav_Resume.pdf"
             download
           >
-            DOWNLOAD PDF
-            <Download size={17} />
+            Download PDF
+            <Download size={17} aria-hidden="true" />
           </a>
 
           <a className="contact-secondary" href={`mailto:${EMAIL}`}>
-            EMAIL ME
-            <Mail size={17} />
+            Email me
+            <Mail size={17} aria-hidden="true" />
           </a>
 
           <button
@@ -134,7 +128,7 @@ export default function Contact() {
           >
             {copied ? "EMAIL COPIED" : "COPY EMAIL"}
 
-            {copied ? <Check size={17} /> : <Copy size={17} />}
+            {copied ? <Check size={17} aria-hidden="true" /> : <Copy size={17} aria-hidden="true" />}
           </button>
 
           <a
@@ -143,7 +137,7 @@ export default function Contact() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            LINKEDIN
+            LinkedIn
             <LinkedInIcon />
           </a>
         </div>

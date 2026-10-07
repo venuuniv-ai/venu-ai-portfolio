@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 
 import { motion } from "framer-motion";
 
@@ -18,6 +18,7 @@ type Message = {
   role: "user" | "assistant";
   content: string;
   sources?: SearchResult[];
+  generation?: AskResponse["generation"];
 };
 
 type AskResponse = {
@@ -25,6 +26,7 @@ type AskResponse = {
   answer: string;
   sources: SearchResult[];
   retrieval: string;
+  generation: "llm" | "deterministic-fallback" | "blocked";
 };
 
 const suggestions = [
@@ -39,14 +41,26 @@ export default function AskVenu() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const requestPending = useRef(false);
+  const messagesRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = messagesRef.current;
+    if (container) container.scrollTop = container.scrollHeight;
+    const frame = window.requestAnimationFrame(() => {
+      if (container) container.scrollTop = container.scrollHeight;
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [messages, isLoading, error]);
 
   async function askQuestion(question: string) {
     const cleanedQuestion = question.trim();
 
-    if (!cleanedQuestion || isLoading) {
+    if (!cleanedQuestion || requestPending.current) {
       return;
     }
 
+    requestPending.current = true;
     setError("");
     setQuery("");
 
@@ -71,13 +85,13 @@ export default function AskVenu() {
         }),
       });
 
+      const data = (await response.json()) as AskResponse & { error?: string };
+
       if (!response.ok) {
         throw new Error(
-          "The portfolio intelligence service could not process the request."
+          data.answer || data.error || "The portfolio intelligence service could not process the request."
         );
       }
-
-      const data = (await response.json()) as AskResponse;
 
       setMessages((current) => [
         ...current,
@@ -85,15 +99,19 @@ export default function AskVenu() {
           role: "assistant",
           content: data.answer,
           sources: data.sources,
+          generation: data.generation,
         },
       ]);
     } catch (requestError) {
       console.error("Ask Venu request failed:", requestError);
 
       setError(
-        "The knowledge interface is temporarily unavailable. Please try again."
+        requestError instanceof Error
+          ? requestError.message
+          : "The knowledge interface is temporarily unavailable. Please try again."
       );
     } finally {
+      requestPending.current = false;
       setIsLoading(false);
     }
   }
@@ -123,17 +141,17 @@ export default function AskVenu() {
             duration: 0.6,
           }}
         >
-          <div className="ask-kicker">05 / PORTFOLIO INTELLIGENCE</div>
+          <div className="ask-kicker">A CONVERSATION ABOUT THE WORK</div>
 
           <div className="ask-title-row">
-            <h2>ASK VENU.</h2>
+            <h2>Ask about <em>my work.</em></h2>
 
             <div className="ask-header-meta">
-              <span>PORTFOLIO / RETRIEVAL INTERFACE</span>
+              <span>EXPERIENCE · PROJECTS · TECHNICAL APPROACH</span>
 
               <strong>
                 <span className="ask-status-dot" />
-                SEMANTIC RETRIEVAL
+                PORTFOLIO RETRIEVAL
               </strong>
             </div>
           </div>
@@ -158,18 +176,18 @@ export default function AskVenu() {
           }}
         >
           <div className="ask-terminal-bar">
-            <span>VENU.OS / KNOWLEDGE INTERFACE</span>
+            <span>ASK VENU</span>
 
             <strong>
-              <Database size={14} />
-              KNOWLEDGE INDEX READY
+              <Database size={14} aria-hidden="true" />
+              ANSWERS WITH SUPPORTING EVIDENCE
             </strong>
           </div>
 
           <div className="ask-layout">
             <aside className="ask-sidebar">
               <div>
-                <div className="ask-sidebar-label">SUGGESTED QUERIES</div>
+                <div className="ask-sidebar-label">Try a question</div>
 
                 <div className="ask-suggestions">
                   {suggestions.map((suggestion, index) => (
@@ -205,15 +223,15 @@ export default function AskVenu() {
 
             <div className="ask-conversation">
               <div className="ask-conversation-top">
-                <span>SESSION / PORTFOLIO QUERY</span>
+                <span>Your conversation</span>
 
-                <span>GROUNDING / RETRIEVED EVIDENCE</span>
+                <span>Grounded in portfolio evidence</span>
               </div>
 
-              <div className="ask-messages">
+              <div ref={messagesRef} className="ask-messages" role="log" aria-live="polite" aria-busy={isLoading}>
                 {messages.length === 0 && !isLoading && (
                   <div className="ask-empty">
-                    <Sparkles size={22} />
+                    <Sparkles size={22} aria-hidden="true" />
 
                     <p>
                       Ask about Venu&apos;s AI engineering experience, projects,
@@ -221,7 +239,7 @@ export default function AskVenu() {
                     </p>
 
                     <span>
-                      Answers are grounded in semantically retrieved portfolio
+                      Answers are grounded in retrieved portfolio
                       evidence.
                     </span>
                   </div>
@@ -248,13 +266,19 @@ export default function AskVenu() {
                     }}
                   >
                     <div className="ask-message-label">
-                      {message.role === "user" ? "QUERY" : "VENU.OS"}
+                      {message.role === "user" ? "YOU" : "ASK VENU"}
                     </div>
 
-                    <p>{message.content}</p>
+                    {message.generation && (
+                      <div className="ask-generation">
+                        GENERATION / {message.generation === "deterministic-fallback" ? "FALLBACK" : message.generation === "llm" ? "LLM" : "BLOCKED"}
+                      </div>
+                    )}
+
+                    <p>{message.role === "user" ? message.content : message.content.replace(/\[SOURCE_\d+\]|\(?\bsource\s+\d+\)?/gi, "").replace(/ +([.,;:])/g, "$1").trim()}</p>
 
                     {message.sources && message.sources.length > 0 && (
-                      <div className="ask-source-grid">
+                      <details className="ask-sources-disclosure"><summary>Supporting sources ({message.sources.length})</summary><div className="ask-source-grid">
                         {message.sources.map((source, sourceIndex) => (
                           <div
                             className="ask-source-card"
@@ -271,7 +295,7 @@ export default function AskVenu() {
                             <p>{source.content}</p>
                           </div>
                         ))}
-                      </div>
+                      </div></details>
                     )}
                   </motion.div>
                 ))}
@@ -288,7 +312,7 @@ export default function AskVenu() {
                   >
                     <div className="ask-message-label">VENU.OS</div>
 
-                    <p>Searching portfolio vector space...</p>
+                    <p>Searching portfolio evidence...</p>
                   </motion.div>
                 )}
 
@@ -302,14 +326,17 @@ export default function AskVenu() {
               </div>
 
               <form className="ask-input-bar" onSubmit={handleSubmit}>
-                <Search size={17} />
+                <Search size={17} aria-hidden="true" />
 
                 <input
+                  id="ask-query"
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
                   placeholder="Ask about experience, RAG, multimodal AI, inference..."
                   aria-label="Ask Venu"
                   autoComplete="off"
+                  maxLength={500}
+                  disabled={isLoading}
                 />
 
                 <button
@@ -317,7 +344,7 @@ export default function AskVenu() {
                   aria-label="Submit question"
                   disabled={isLoading || !query.trim()}
                 >
-                  <ArrowUp size={18} />
+                  <ArrowUp size={18} aria-hidden="true" />
                 </button>
               </form>
             </div>

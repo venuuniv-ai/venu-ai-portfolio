@@ -1,92 +1,43 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowDownRight, ArrowUpRight } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
+import EvidenceDiagram from "@/components/work/EvidenceDiagram";
 
 const focusAreas = [
-  ["01", "RAG + AGENTS"],
-  ["02", "MULTIMODAL AI"],
-  ["03", "LLM INFERENCE"],
-  ["04", "ML INFRASTRUCTURE"],
+  { label: "Retrieval & agents", href: "#systems" },
+  { label: "Multimodal AI", href: "#systems-visual" },
+  { label: "Model inference", href: "#inference-bench" },
+  { label: "ML infrastructure", href: "#ml-infrastructure" },
 ];
 
+export function navigateToSection(href: string) {
+  const destination = document.querySelector(href);
+  if (!destination) return;
+  if (window.location.hash !== href) window.history.pushState(null, "", href);
+  window.dispatchEvent(new Event("hashchange"));
+  window.requestAnimationFrame(() => destination.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "start" }));
+}
+
 export default function Hero() {
+  const reduced = useReducedMotion();
   return (
-    <main className="hero">
-      <div className="hero-grid" aria-hidden="true" />
-
+    <section className="hero" aria-label="Introduction">
       <div className="hero-content">
-        <motion.div
-          className="hero-eyebrow"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45 }}
-        >
-          <span>AI / ML ENGINEER</span>
-          <span className="hero-coordinate">39.10°N / SYSTEM 01</span>
+        <motion.div className="hero-intro" initial={{ opacity: 0, y: reduced ? 0 : 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduced ? 0 : 0.5 }}>
+          <span className="section-index">AI / ML ENGINEER</span>
+          <h1>Building <em>reliable</em><br />AI systems.</h1>
+          <p className="hero-summary">From retrieval and agents to multimodal learning and model serving. Exploring what it takes to turn model capability into dependable systems.</p>
+          <div className="hero-buttons"><a className="primary-button" href="#work">Explore my work <ArrowUpRight size={17} aria-hidden="true" /></a><a className="secondary-button" href="/resume/VenuMadhav_Resume.pdf" target="_blank" rel="noopener noreferrer">View resume <ArrowUpRight size={17} aria-hidden="true" /></a></div>
+          <nav className="hero-domains" aria-label="Explore engineering domains">{focusAreas.map(({ label, href }) => <a key={href} href={href} onClick={(event) => { event.preventDefault(); navigateToSection(href); }}>{label}<ArrowUpRight size={12} aria-hidden="true" /></a>)}</nav>
         </motion.div>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.08 }}
-        >
-          I ENGINEER
-          <br />
-          AI SYSTEMS THAT
-          <br />
-          <span>SURVIVE PRODUCTION.</span>
-        </motion.h1>
-
-        <motion.div
-          className="hero-lower"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.7, delay: 0.25 }}
-        >
-          <div className="hero-description">
-            <p>
-              Building production-grade systems across Generative AI, large
-              language models, multimodal learning and ML infrastructure.
-            </p>
-
-            <div className="hero-buttons">
-              <Link href="/work" className="primary-button">
-                EXPLORE SYSTEMS
-                <ArrowDownRight size={16} />
-              </Link>
-
-              <button className="secondary-button" type="button">
-                ASK VENU
-                <ArrowUpRight size={16} />
-              </button>
-            </div>
-          </div>
-
-          <div className="focus-panel">
-            <div className="panel-heading">
-              <span>CURRENT FOCUS</span>
-              <span>2026</span>
-            </div>
-
-            {focusAreas.map(([number, label]) => (
-              <div className="focus-row" key={number}>
-                <span className="focus-number">{number}</span>
-                <span>{label}</span>
-                <ArrowUpRight size={14} />
-              </div>
-            ))}
-          </div>
-        </motion.div>
+        <motion.a href="#work" className="hero-featured" initial={{ opacity: 0, y: reduced ? 0 : 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduced ? 0 : 0.5, delay: reduced ? 0 : 0.15 }}>
+          <div className="featured-heading"><div><span className="section-index">FEATURED PROJECT · IN DEVELOPMENT</span><h2>Multimodal Agentic RAG</h2></div><ArrowUpRight size={20} aria-hidden="true" /></div>
+          <EvidenceDiagram />
+          <p>Independent retrieval. Shared evidence. Grounded answers.</p>
+        </motion.a>
       </div>
-
-      <div className="hero-footer">
-        <span>GENERATIVE AI</span>
-        <span>LLM SYSTEMS</span>
-        <span>MULTIMODAL AI</span>
-        <span>ML INFRASTRUCTURE</span>
-      </div>
-    </main>
+      <a className="hero-scroll-cue" href="#work" onClick={(event) => { event.preventDefault(); navigateToSection("#work"); }}>Scroll to explore <ArrowDown size={15} aria-hidden="true" /></a>
+    </section>
   );
 }
