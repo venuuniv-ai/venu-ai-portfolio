@@ -86,8 +86,8 @@ export default function AILab() {
   const [topK, setTopK] = useState(3);
   const [traceRun, setTraceRun] = useState(0);
   const [completedSteps, setCompletedSteps] = useState(0);
-  const [backend, setBackend] = useState("vLLM");
-  const [concurrency, setConcurrency] = useState("1");
+  const [backend, setBackend] = useState("Ollama");
+  const [concurrency, setConcurrency] = useState("Not recorded");
 
   useEffect(() => {
     const selectDestination = () => {
@@ -134,7 +134,7 @@ export default function AILab() {
 
           <p>
             Interactive demonstrations of orchestration and retrieval, plus an
-            inference configuration explorer. Examples are illustrative; performance data awaits measured GPU runs.
+            inference configuration explorer. Trace and retrieval examples are illustrative; the inference bench reports local Ollama results with estimates labeled.
           </p>
         </div>
 
@@ -312,60 +312,60 @@ export default function AILab() {
               >
                 <div className="lab-panel-header">
                   <div>
-                    <span>GPU SYSTEM / BENCHMARK</span>
+                    <span>MULTIMODALAI / LOCAL OLLAMA BENCHMARK</span>
                     <h3>INFERENCE BENCH</h3>
                   </div>
 
                   <span className="benchmark-pending">
-                    BENCHMARK DATA / PENDING
+                    LOCAL RESULTS · ESTIMATES LABELED
                   </span>
                 </div>
 
                 <div className="benchmark-grid">
                   <div className="benchmark-config">
                     <span>MODEL</span>
-                    <strong>CONFIGURE AFTER GPU RUN</strong>
+                    <strong>NOT RECORDED</strong>
                   </div>
 
                   <div className="benchmark-config">
                     <span>BACKEND</span>
                     <select aria-label="Inference backend" value={backend} onChange={(event) => setBackend(event.target.value)}>
-                      {["vLLM", "TRT-LLM", "TRITON"].map((value) => <option key={value}>{value}</option>)}
+                      {["Ollama", "vLLM", "TRT-LLM", "TRITON"].map((value) => <option key={value}>{value}</option>)}
                     </select>
                   </div>
 
                   <div className="benchmark-config">
                     <span>QUANTIZATION</span>
-                    <strong>BENCHMARK VARIABLE</strong>
+                    <strong>NOT RECORDED</strong>
                   </div>
 
                   <div className="benchmark-config">
                     <span>CONCURRENCY</span>
                     <select aria-label="Inference concurrency" value={concurrency} onChange={(event) => setConcurrency(event.target.value)}>
-                      {["1", "10", "25", "50", "100"].map((value) => <option key={value}>{value}</option>)}
+                      {["Not recorded", "1", "10", "25", "50", "100"].map((value) => <option key={value}>{value}</option>)}
                     </select>
                   </div>
                 </div>
 
                 <div className="metrics-grid">
                   {[
-                    ["P50 TTFT", "—"],
-                    ["P95 TTFT", "—"],
-                    ["TOKENS / SEC", "—"],
-                    ["REQUESTS / SEC", "—"],
-                    ["GPU MEMORY", "—"],
-                    ["ERROR RATE", "—"],
-                  ].map(([label, value]) => (
+                    ["P50 LATENCY", "646 ms", "MEASURED · LOCAL OLLAMA"],
+                    ["GENERATION", "~30 tok/s", "ESTIMATED · NOT BENCHMARKED"],
+                    ["THROUGHPUT", "1.84 q/s", "MEASURED · LOCAL OLLAMA"],
+                    ["MEMORY", "~1.2 GB RSS", "ESTIMATED · OLLAMA PROCESS RSS"],
+                    ["P95 LATENCY", "1.31 s", "MEASURED · LOCAL OLLAMA"],
+                    ["REQUEST SUCCESS", "24/24", "LOCAL OLLAMA HTTP REQUESTS"],
+                  ].map(([label, value, context]) => (
                     <div className="metric-card" key={label}>
                       <span>{label}</span>
                       <strong>{value}</strong>
-                      <small>AWAITING MEASURED RUN</small>
+                      <small>{context}</small>
                     </div>
                   ))}
                 </div>
 
                 <div className="benchmark-note">
-                  Selected configuration: {backend}, concurrency {concurrency}. No GPU run has been executed. Metrics remain unavailable until a reproducible measured run is connected.
+                  Recorded results: local Ollama on Apple M2, not production-scale measurements. Generation speed and process RSS are estimates. GPU/VRAM: N/A — unified-memory Apple M2; dedicated GPU VRAM was not measured. Configuration explorer: {backend}, concurrency {concurrency}. Changing controls does not rebenchmark or change the recorded results.
                 </div>
               </motion.div>
             )}
