@@ -5,6 +5,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import EvidenceDiagram from "./EvidenceDiagram";
 import NovaFlow from "./NovaFlow";
+import NovaBenchmarks from "./NovaBenchmarks";
 import { navigateToSection } from "@/components/hero/Hero";
 
 const views = [
@@ -34,6 +35,7 @@ export default function SelectedWork() {
           <p className="nova-boundary">Local MVP · Fixture AI by default · No automatic external actions. Real vision and production deployment remain unqualified.</p>
         </div>
       </article>
+      <NovaBenchmarks />
       <div className="work-filters" role="group" aria-label="Project perspectives">{views.map((item, index) => <button key={item.label} type="button" aria-pressed={index === active} onClick={() => setActive(index)}>{item.label}</button>)}</div>
       <div className="work-preview"><EvidenceDiagram interactive /><div className="work-preview-copy"><span className="section-index">MULTIMODAL AGENTIC RAG & AI INFERENCE PLATFORM</span><AnimatePresence mode="wait" initial={false}><motion.div key={view.label} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduced ? 0 : 0.15 }}><h3>{view.title}</h3><p>{view.copy}</p><div className="project-tags">{view.tech.map((tag) => <span key={tag}>{tag}</span>)}</div><a className="primary-button" href={view.href} onClick={(event) => { event.preventDefault(); navigateToSection(view.href); }}>{view.action}<ArrowUpRight size={16} aria-hidden="true" /></a></motion.div></AnimatePresence><a className="work-demo-link" href="#lab">Architecture & interactive demos <ArrowUpRight size={15} aria-hidden="true" /></a></div></div>
     </section>

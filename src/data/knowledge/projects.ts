@@ -13,6 +13,9 @@ export const projects = [
       "Grounded selection with independently checked values, original source UUIDs, exact quotes and final privacy revalidation.",
       "Durable proactive drafts stop at pending human approval; no automatic external actions.",
       "Repeatable launch, health-check, shutdown and recovery procedures with local resource gates.",
+      "SELECTION_V1 engineering milestone: the model selects an exact value and evidence index; the application independently validates support, original UUID/full quote, conflicts and current privacy. Earlier production positive requests abstained. The new bounded positive and conditional insufficiency cases passed without changing model or resource ceilings; the historical cause remains unresolved.",
+      "Real acceptance measured positive input/output tokens 154/19, model-call latency 6683.123 ms and HTTP wall time 12311.788 ms; insufficiency 130/18 tokens, 5498.805 ms model-call and 8991.005 ms HTTP. One sample per case, zero retries, CPU-only Apple M2 with 8 GiB RAM; not throughput or percentile benchmarks.",
+      "Five-positive-question retrieval-v1 benchmark: lexical Recall@5/MRR/nDCG@5 0.4/0.4/0.4; fixture hashes 1.0/0.69/0.7475; learned BGE semantic and hybrid 1.0/0.9/0.9101. BGE still returned five irrelevant hits for the no-answer query. Tiny-set results are not general semantic superiority.",
       "Qualification: 762 backend tests passed with one explicit real-model opt-in skip; 60 browser cases passed across separate profiles. These deterministic checks are not learned-model quality scores.",
     ],
     architecture: [

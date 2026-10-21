@@ -34,7 +34,7 @@ export default function Hero() {
         <motion.a href="#nova" className="hero-featured" initial={{ opacity: 0, y: reduced ? 0 : 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduced ? 0 : 0.5, delay: reduced ? 0 : 0.15 }}>
           <div className="featured-heading"><div><span className="section-index">FEATURED PROJECT · LOCAL MVP v1.0</span><h2>NOVA · Personal AI workspace</h2></div><ArrowUpRight size={20} aria-hidden="true" /></div>
           <NovaFlow />
-          <p>Owned memory. Verified grounding. Human approval.</p>
+          <p>Model selects. Application verifies. Human approves.</p>
         </motion.a>
       </div>
       <a className="hero-scroll-cue" href="#work" onClick={(event) => { event.preventDefault(); navigateToSection("#work"); }}>Scroll to explore <ArrowDown size={15} aria-hidden="true" /></a>

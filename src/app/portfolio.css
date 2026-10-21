@@ -189,3 +189,38 @@ button.evidence-fusion, button.evidence-output { background: transparent; color:
 .nova-project { margin-bottom: 32px; scroll-margin-top: 100px; }
 .work-preview-copy .nova-validation, .work-preview-copy .nova-boundary { min-height: 0; font-size: 12px; line-height: 1.7; margin-top: 18px; }
 @media (max-width: 380px) { .nova-flow li { padding: 18px 10px; } .nova-flow strong { font-size: 12px; } }
+
+/* Audited NOVA results: separate real acceptance from deterministic qualification. */
+.nova-benchmarks { margin: 0 0 48px; padding: 32px; border: 1px solid var(--border); border-radius: 20px; background: #111813; min-width: 0; }
+.nova-benchmark-heading { display: grid; grid-template-columns: 1.2fr 1fr; align-items: end; gap: 32px; }
+.nova-benchmark-heading h3 { font: 400 clamp(25px, 3vw, 36px)/1.2 var(--display); letter-spacing: -.025em; margin: 16px 0 0; }
+.nova-benchmark-heading em { color: var(--accent); font-weight: 400; }
+.nova-benchmarks p { color: var(--muted); font-size: 13px; line-height: 1.8; }
+.nova-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 28px 0; }
+.nova-metrics > div { padding: 20px 16px; border: 1px solid var(--border); border-radius: 12px; }
+.nova-metrics dt { color: var(--muted); font-size: 11px; }
+.nova-metrics dd { font: 400 26px/1.2 var(--display); margin: 10px 0; }
+.nova-metrics small { display: block; color: var(--muted); font-size: 10px; line-height: 1.7; }
+.nova-benchmark-controls { flex-wrap: wrap; }
+.nova-benchmark-panel { padding-top: 12px; }
+.nova-benchmark-panel h4 { font: 400 25px/1.25 var(--display); margin: 12px 0; }
+.nova-contract-comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.nova-contract-comparison article { padding: 22px; background: #18201a; border: 1px solid var(--border); border-radius: 12px; }
+.nova-result-label { color: var(--accent); font-size: 9px; line-height: 1.7; display: block; letter-spacing: .06em; }
+.nova-contract-comparison dl { margin: 18px 0 0; padding-top: 12px; border-top: 1px solid var(--border); }
+.nova-contract-comparison dl > div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 6px 0; font-size: 12px; }
+.nova-contract-comparison dt { color: var(--muted); }
+.nova-contract-comparison dd { margin: 0; }
+.nova-contract-output { padding: 20px 0 0; }
+.nova-contract-output pre { overflow-x: auto; padding: 18px; background: #0c120e; border: 1px solid var(--border); border-radius: 10px; font-size: 12px; }
+.nova-table-scroll { overflow-x: auto; }
+.nova-benchmarks table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.nova-benchmarks caption { text-align: left; color: var(--muted); font-size: 11px; padding: 8px 0 16px; line-height: 1.7; }
+.nova-benchmarks th, .nova-benchmarks td { padding: 14px 12px; text-align: left; border-bottom: 1px solid var(--border); line-height: 1.7; }
+.nova-benchmarks th { font-weight: 500; }
+.nova-benchmarks thead { color: var(--muted); }
+.nova-table-highlight { background: #1b291e; color: #d3e9c2; }
+.nova-benchmarks .nova-evidence-note { border-left: 2px solid var(--accent); padding-left: 14px; font-size: 12px; margin: 24px 0; }
+.nova-evidence-footer { margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 14px; color: var(--muted); font-size: 11px; line-height: 1.7; }
+.nova-evidence-footer a { display: inline-flex; align-items: center; gap: 6px; }
+@media (max-width: 700px) { .nova-benchmarks { padding: 20px 16px; } .nova-benchmark-heading, .nova-contract-comparison, .nova-metrics { grid-template-columns: minmax(0, 1fr); gap: 12px; } .nova-metrics > div { padding: 16px; } .nova-metrics dd { font-size: 24px; } .nova-contract-comparison article { padding: 18px; } .nova-benchmarks th, .nova-benchmarks td { padding: 12px 8px; min-width: 95px; } }
