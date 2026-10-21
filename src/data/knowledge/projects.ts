@@ -1,5 +1,41 @@
 export const projects = [
   {
+    id: "nova",
+    name: "NOVA — Local Personal AI Workspace",
+    type: "Independent AI Engineering Project",
+    status: "v1.0 Local MVP",
+    overview:
+      "NOVA is a local-first personal AI workspace with authenticated device continuity, owned context and memory, grounded retrieval, proactive preference drafts and a human-in-the-loop approval interface. Its public source is https://github.com/venuuniv-ai/NOVA. Deterministic fixtures are the default; bounded CPU-only BGE and Qwen acceptance was validated separately. It is a local MVP, not a hosted production service or a general AI quality claim.",
+    features: [
+      "Local authentication with owner and device authorization.",
+      "Persistent task continuity across Desktop, Wearable and Mobile interfaces.",
+      "Hybrid lexical and pgvector retrieval with versioned BGE embeddings.",
+      "Grounded selection with independently checked values, original source UUIDs, exact quotes and final privacy revalidation.",
+      "Durable proactive drafts stop at pending human approval; no automatic external actions.",
+      "Repeatable launch, health-check, shutdown and recovery procedures with local resource gates.",
+      "Qualification: 762 backend tests passed with one explicit real-model opt-in skip; 60 browser cases passed across separate profiles. These deterministic checks are not learned-model quality scores.",
+    ],
+    architecture: [
+      "Next.js and a Go gateway connect to FastAPI, PostgreSQL with pgvector, Redis and local Kafka.",
+      "Transactional outbox and inbox records support durable delivery, deduplication and bounded worker recovery.",
+      "Provider abstractions keep deterministic fixture operation separate from explicitly enabled local inference.",
+      "BGE-small-en-v1.5 and Qwen2.5-1.5B run sequentially on CPU under fixed context, memory and timeout limits.",
+      "Owned source bindings, conflict checks and atomic final privacy validation guard draft acceptance; model output cannot grant action authority.",
+    ],
+    stack: ["Next.js", "TypeScript", "FastAPI", "Python", "Go", "PostgreSQL", "pgvector", "Redis", "Kafka", "Docker Compose", "BGE", "Qwen", "Ollama"],
+    engineeringDecisions: [
+      {
+        question: "Why does NOVA default to deterministic fixtures?",
+        answer: "Fixtures keep local development and automated qualification repeatable without paid APIs or accidental model activation. The UI labels simulated behavior; real inference requires explicit enablement and resource checks.",
+      },
+      {
+        question: "What are NOVA's grounding and release limits?",
+        answer: "Grounding covers a narrow structured preference subset with exact-value and source verification, not general semantic entailment. The local release does not qualify real vision, model judging, sustained load or production deployment. Draft approval does not enable automatic external execution.",
+      },
+    ],
+    searchableTopics: ["NOVA", "Local MVP", "Local AI", "Grounded RAG", "Proactive Drafts", "Human-in-the-loop", "Device Continuity", "BGE", "Qwen", "pgvector", "Kafka", "Privacy", "Source Validation"],
+  },
+  {
     id: "multimodal-agentic-rag",
 
     name: "Multimodal Agentic RAG & AI Inference Platform",

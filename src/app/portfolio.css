@@ -178,3 +178,14 @@ button.evidence-fusion, button.evidence-output { background: transparent; color:
 .evidence-stage-detail p { font-size: 12px; line-height: 1.7; margin: 10px 0 0; color: var(--muted); }
 @media (max-width:700px) { .evidence-stage-detail { min-height: 185px; } }
 @media (prefers-reduced-motion:reduce) { .evidence-explorer button { transition: none; } }
+
+/* NOVA local MVP project and shared hero architecture. */
+.nova-flow { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 24px 0; margin: 0; list-style: none; }
+.nova-flow li { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: 20px 16px; border: 1px solid var(--border); border-radius: 12px; background: #101611; min-width: 0; }
+.nova-flow svg { color: #bdd7a7; }
+.nova-flow strong { font-size: 13px; font-weight: 500; }
+.nova-flow small { color: var(--muted); font-size: 11px; line-height: 1.6; }
+.nova-step { position: absolute; top: 16px; right: 14px; color: var(--muted); font-size: 10px; }
+.nova-project { margin-bottom: 32px; scroll-margin-top: 100px; }
+.work-preview-copy .nova-validation, .work-preview-copy .nova-boundary { min-height: 0; font-size: 12px; line-height: 1.7; margin-top: 18px; }
+@media (max-width: 380px) { .nova-flow li { padding: 18px 10px; } .nova-flow strong { font-size: 12px; } }

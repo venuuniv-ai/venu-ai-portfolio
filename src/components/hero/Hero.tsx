@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
-import EvidenceDiagram from "@/components/work/EvidenceDiagram";
+import NovaFlow from "@/components/work/NovaFlow";
 
 const focusAreas = [
   { label: "Retrieval & agents", href: "#systems" },
@@ -31,10 +31,10 @@ export default function Hero() {
           <div className="hero-buttons"><a className="primary-button" href="#work">Explore my work <ArrowUpRight size={17} aria-hidden="true" /></a><a className="secondary-button" href="/resume/VenuMadhav_Resume.pdf" target="_blank" rel="noopener noreferrer">View resume <ArrowUpRight size={17} aria-hidden="true" /></a></div>
           <nav className="hero-domains" aria-label="Explore engineering domains">{focusAreas.map(({ label, href }) => <a key={href} href={href} onClick={(event) => { event.preventDefault(); navigateToSection(href); }}>{label}<ArrowUpRight size={12} aria-hidden="true" /></a>)}</nav>
         </motion.div>
-        <motion.a href="#work" className="hero-featured" initial={{ opacity: 0, y: reduced ? 0 : 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduced ? 0 : 0.5, delay: reduced ? 0 : 0.15 }}>
-          <div className="featured-heading"><div><span className="section-index">FEATURED PROJECT · IN DEVELOPMENT</span><h2>Multimodal Agentic RAG</h2></div><ArrowUpRight size={20} aria-hidden="true" /></div>
-          <EvidenceDiagram />
-          <p>Independent retrieval. Shared evidence. Grounded answers.</p>
+        <motion.a href="#nova" className="hero-featured" initial={{ opacity: 0, y: reduced ? 0 : 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduced ? 0 : 0.5, delay: reduced ? 0 : 0.15 }}>
+          <div className="featured-heading"><div><span className="section-index">FEATURED PROJECT · LOCAL MVP v1.0</span><h2>NOVA · Personal AI workspace</h2></div><ArrowUpRight size={20} aria-hidden="true" /></div>
+          <NovaFlow />
+          <p>Owned memory. Verified grounding. Human approval.</p>
         </motion.a>
       </div>
       <a className="hero-scroll-cue" href="#work" onClick={(event) => { event.preventDefault(); navigateToSection("#work"); }}>Scroll to explore <ArrowDown size={15} aria-hidden="true" /></a>
