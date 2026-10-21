@@ -23,7 +23,7 @@ export default function SelectedWork() {
     <section className="work-section" id="work">
       <div className="editorial-heading"><div><span className="section-index">SELECTED WORK</span><h2>Selected work, <em>explored.</em></h2></div><p>Two projects. Shared focus on reliable AI.<br />NOVA · Local MVP / MultimodalAI · Retrieval platform.</p></div>
       <article className="work-preview nova-project" id="nova" aria-labelledby="nova-title">
-        <NovaFlow />
+        <NovaFlow interactive />
         <div className="work-preview-copy">
           <span className="section-index">NOVA · v1.0 LOCAL MVP</span>
           <h3 id="nova-title">Personal AI, with boundaries.</h3>

@@ -1,3 +1,4 @@
+import { projects } from "@/data/knowledge/projects";
 import {
   portfolioKnowledge,
   type KnowledgeDocument,
@@ -478,9 +479,20 @@ export async function searchPortfolioSemantically(
     return [];
   }
 
-  const expandedQuery = expandQuery(trimmedQuery);
+  // Explicit project aliases constrain retrieval before expansion/diversification.
+  // Otherwise broad RAG/inference expansions can displace the named project's evidence.
+  const normalized = ` ${normalize(trimmedQuery)} `;
+  const namedProjects: string[] = projects.filter(project =>
+    "retrievalAliases" in project && project.retrievalAliases.some(alias =>
+      normalized.includes(` ${normalize(alias)} `)
+    )
+  ).map(project => project.id);
+  const corpus = namedProjects.length
+    ? portfolioKnowledge.filter(document => document.projectId && namedProjects.includes(document.projectId))
+    : portfolioKnowledge;
+  const expandedQuery = namedProjects.length ? trimmedQuery : expandQuery(trimmedQuery);
 
-  const ranked = portfolioKnowledge.map((document) => {
+  const ranked = corpus.map((document) => {
     const lexicalScore = lexicalSimilarity(expandedQuery, document);
 
     const phraseScore = phraseSimilarity(trimmedQuery, document);
@@ -499,5 +511,5 @@ export async function searchPortfolioSemantically(
 
   const sorted = ranked.sort((first, second) => second.score - first.score);
 
-  return diversifyResults(sorted, limit);
+  return namedProjects.length ? sorted.slice(0, limit) : diversifyResults(sorted, limit);
 }

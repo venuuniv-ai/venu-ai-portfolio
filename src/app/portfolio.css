@@ -224,3 +224,35 @@ button.evidence-fusion, button.evidence-output { background: transparent; color:
 .nova-evidence-footer { margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 14px; color: var(--muted); font-size: 11px; line-height: 1.7; }
 .nova-evidence-footer a { display: inline-flex; align-items: center; gap: 6px; }
 @media (max-width: 700px) { .nova-benchmarks { padding: 20px 16px; } .nova-benchmark-heading, .nova-contract-comparison, .nova-metrics { grid-template-columns: minmax(0, 1fr); gap: 12px; } .nova-metrics > div { padding: 16px; } .nova-metrics dd { font-size: 24px; } .nova-contract-comparison article { padding: 18px; } .nova-benchmarks th, .nova-benchmarks td { padding: 12px 8px; min-width: 95px; } }
+
+.nova-flow-explorer { min-width: 0; }
+.nova-flow-explorer .nova-flow li { padding: 0; }
+.nova-flow li button { display: flex; position: relative; flex-direction: column; align-items: flex-start; gap: 12px; width: 100%; height: 100%; padding: 20px 16px; border: 0; border-radius: 12px; color: inherit; background: transparent; text-align: left; cursor: pointer; font: inherit; }
+.nova-flow li button[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--accent); background: #1b291e; }
+.nova-flow li button:focus-visible, .nova-replay button:focus-visible, .nova-ask-shortcuts button:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.nova-flow-detail { padding: 18px 0; border-top: 1px solid var(--border); min-height: 156px; }
+.nova-flow-detail strong { font-size: 13px; color: var(--accent); }
+.nova-flow-detail p { color: var(--muted); font-size: 12px; line-height: 1.8; }
+.nova-replay { margin-top: 32px; padding-top: 28px; border-top: 1px solid var(--border); }
+.nova-replay-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+.nova-replay h4 { font: 400 26px/1.3 var(--display); margin: 14px 0; }
+.nova-replay-badge { color: var(--accent); border: 1px solid var(--border); border-radius: 20px; padding: 8px 12px; font-size: 10px; }
+.nova-replay-select { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 12px; margin: 20px 0; }
+.nova-replay-select select { background: #18201a; color: inherit; border: 1px solid var(--border); border-radius: 8px; padding: 10px; font: inherit; max-width: 100%; }
+.nova-replay-query { font-style: italic; }
+.nova-replay-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 20px 0; }
+.nova-replay-steps button { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; color: inherit; font: inherit; font-size: 12px; padding: 16px 12px; background: #18201a; border: 1px solid var(--border); border-radius: 10px; cursor: pointer; }
+.nova-replay-steps small { color: var(--muted); font-size: 10px; }
+.nova-replay-steps button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+.nova-replay-detail { padding: 20px; border-radius: 12px; border: 1px solid var(--border); background: #0c120e; }
+.nova-replay-detail strong { font-size: 13px; color: var(--accent); }
+.nova-replay-detail pre { overflow-x: auto; font-size: 12px; line-height: 1.7; }
+.nova-replay-detail small, .nova-replay-citation code { font-size: 11px; color: var(--muted); overflow-wrap: anywhere; }
+.nova-replay-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin-top: 20px; }
+.nova-replay-actions button { cursor: pointer; font-family: inherit; }
+.nova-replay-actions button:disabled { opacity: .45; cursor: default; }
+.nova-ask-shortcuts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; padding-top: 22px; border-top: 1px solid var(--border); }
+.nova-ask-shortcuts > span, .nova-ask-shortcuts > small { flex-basis: 100%; }
+.nova-ask-shortcuts > small { color: var(--muted); font-size: 11px; line-height: 1.7; }
+.nova-ask-shortcuts button { display: inline-flex; align-items: center; gap: 8px; background: #18201a; border: 1px solid var(--border); color: inherit; padding: 12px; border-radius: 10px; text-align: left; font: inherit; font-size: 12px; cursor: pointer; }
+@media (max-width: 500px) { .nova-replay-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } .nova-flow-detail { min-height: 0; } .nova-replay-actions { gap: 20px; } }

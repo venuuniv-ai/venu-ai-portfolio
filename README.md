@@ -318,3 +318,21 @@ LinkedIn: `linkedin.com/in/venu-madhav-t/`
 ---
 
 Built as an AI engineering system, not just a portfolio.
+
+
+## NOVA showcase and assistant knowledge
+
+The NOVA project includes a clickable architecture explorer, audited benchmark
+views and a step-by-step replay of two historical acceptance cases. Replays use
+recorded data only and make no inference requests. The Ask Venu buttons prepare
+questions; visitors submit them explicitly.
+
+Ask Venu retrieves NOVA architecture, SELECTION_V1 design, measured retrieval and
+CPU results, qualification evidence, launch instructions and limitations from
+`src/data/knowledge/projects.ts`. Explicit NOVA/SELECTION_V1 queries are scoped to
+NOVA documents before ranking; broad experience questions retain existing source
+diversification. This updates retrieval knowledge, not model weights. Existing
+server-side generation and rate-limit configuration remain in place.
+
+Run `npm run test:knowledge` for deterministic, network-free retrieval and fallback
+checks. These checks do not measure live generation quality or learned grounding.

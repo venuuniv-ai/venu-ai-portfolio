@@ -15,6 +15,7 @@ export type KnowledgeDocument = {
   title: string;
   content: string;
   keywords: string[];
+  projectId?: string;
 };
 
 const profileDocuments: KnowledgeDocument[] = [
@@ -207,7 +208,7 @@ const projectDocuments: KnowledgeDocument[] = projects.flatMap((project) => {
     });
   }
 
-  return documents;
+  return documents.map(document => ({ ...document, projectId: project.id }));
 });
 
 const skillDocuments: KnowledgeDocument[] = Object.entries(skills).map(

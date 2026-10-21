@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
+import NovaAcceptanceReplay from "./NovaAcceptanceReplay";
+import { preparePortfolioQuestion } from "@/lib/askNavigation";
 
 const audit = "https://github.com/venuuniv-ai/NOVA/blob/main/docs/phase-9-final-audit.md";
 const perspectives = ["The breakthrough", "Retrieval benchmark", "Real CPU acceptance"] as const;
@@ -58,6 +60,8 @@ export default function NovaBenchmarks() {
           <a className="work-demo-link" href={`${audit}#actual-measurements-and-sequential-residency`} target="_blank" rel="noopener noreferrer">Inspect timing and resource boundaries <ArrowUpRight size={15} aria-hidden="true" /></a>
         </>}
       </div>
+      <NovaAcceptanceReplay />
+      <div className="nova-ask-shortcuts"><span className="section-index">EXPLORE WITH ASK VENU</span>{["What was the NOVA grounding breakthrough?", "What retrieval benchmarks were measured for NOVA?", "What are NOVA's limitations?"].map(question => <button type="button" key={question} onClick={() => preparePortfolioQuestion(question)}>{question} <ArrowUpRight size={14} aria-hidden="true" /></button>)}<small>Choose a question to prepare it in the chat. Submit when ready.</small></div>
       <footer className="nova-evidence-footer"><span>Real model results and deterministic regression counts are separate evidence.</span><a href="https://github.com/venuuniv-ai/NOVA/blob/main/docs/phase-11-test-evidence.md" target="_blank" rel="noopener noreferrer">Qualification: 60 browser cases across profiles <ArrowUpRight size={13} aria-hidden="true" /></a></footer>
     </section>
   );

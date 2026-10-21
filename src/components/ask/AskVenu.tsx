@@ -31,8 +31,8 @@ type AskResponse = {
 
 const suggestions = [
   "Where has Venu used RAG?",
-  "What is Venu's multimodal AI experience?",
-  "Which ML infrastructure tools has Venu used?",
+  "What was the NOVA grounding breakthrough?",
+  "What benchmarks were measured for NOVA?",
   "Explain Venu's AI engineering trajectory.",
 ];
 
@@ -43,6 +43,18 @@ export default function AskVenu() {
   const [error, setError] = useState("");
   const requestPending = useRef(false);
   const messagesRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    function prepare(event: Event) {
+      const question = (event as CustomEvent<unknown>).detail;
+      if (typeof question !== "string" || !question.trim() || question.length > 500 || requestPending.current) return;
+      setQuery(question);
+      inputRef.current?.focus({ preventScroll: true });
+    }
+    window.addEventListener("portfolio:question", prepare);
+    return () => window.removeEventListener("portfolio:question", prepare);
+  }, []);
 
   useEffect(() => {
     const container = messagesRef.current;
@@ -211,7 +223,7 @@ export default function AskVenu() {
 
                 <p>
                   <span />
-                  STRUCTURED PORTFOLIO DATA
+                  NOVA + PORTFOLIO EVIDENCE
                 </p>
 
                 <p>
@@ -329,10 +341,11 @@ export default function AskVenu() {
                 <Search size={17} aria-hidden="true" />
 
                 <input
+                  ref={inputRef}
                   id="ask-query"
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Ask about experience, RAG, multimodal AI, inference..."
+                  placeholder="Ask about NOVA, benchmarks, RAG, or experience..."
                   aria-label="Ask Venu"
                   autoComplete="off"
                   maxLength={500}
