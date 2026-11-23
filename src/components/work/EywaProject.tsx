@@ -29,12 +29,13 @@ export default function EywaProject() {
       <h3 id="eywa-title">Local voice. Verified actions.</h3>
       <p>A voice platform for an 8 GB Apple M2, combining interruptible conversations with a fictional clinic booking workflow. Spoken read-back, explicit confirmation and transactional writes connect conversation to verified appointment actions. Runs offline after setup.</p>
       <div className="project-tags">{["30/30 synthetic task expectations", "1,054 ms voice-to-voice P50", "1,287 ms P95"].map(tag => <span key={tag}>{tag}</span>)}</div>
-      <p className="nova-validation">Final synthetic suite: zero false confirmations across 19 success claims and zero duplicate booking writes. Mean known-script ASR WER: 19.62%. Timings measure speech-end to first audio receipt, not acoustic speaker latency.</p>
-      <div className="project-tags">{["FastAPI + React", "whisper.cpp", "llama.cpp", "Piper", "SQLite"].map(tag => <span key={tag}>{tag}</span>)}</div>
       <a className="primary-button" href={repository} target="_blank" rel="noopener noreferrer">View EYWA on GitHub<ArrowUpRight size={16} aria-hidden="true" /></a>
       <a className="work-demo-link" href={`${repository}/blob/master/docs/demo.mp4`} target="_blank" rel="noopener noreferrer">Recorded booking demo · Synthetic caller<ArrowUpRight size={15} aria-hidden="true" /></a>
+      <details className="project-measurements"><summary>Stack, evaluation & limits</summary>      <p className="nova-validation">Final synthetic suite: zero false confirmations across 19 success claims and zero duplicate booking writes. Mean known-script ASR WER: 19.62%. Timings measure speech-end to first audio receipt, not acoustic speaker latency.</p>
+      <div className="project-tags">{["FastAPI + React", "whisper.cpp", "llama.cpp", "Piper", "SQLite"].map(tag => <span key={tag}>{tag}</span>)}</div>
+
       <a className="work-demo-link" href={`${repository}/blob/master/benchmarks/phase3/summary.md`} target="_blank" rel="noopener noreferrer">Evaluation report & measurement limits<ArrowUpRight size={15} aria-hidden="true" /></a>
-      <p className="nova-boundary">Local demo · One concurrent call · Fictional clinic, no real telephone integration. Results cover 30 synthetic scenarios, not arbitrary callers or production-scale performance.</p>
+      <p className="nova-boundary">Local demo · One concurrent call · Fictional clinic, no real telephone integration. Results cover 30 synthetic scenarios, not arbitrary callers or production-scale performance.</p></details>
     </div>
   </article>;
 }

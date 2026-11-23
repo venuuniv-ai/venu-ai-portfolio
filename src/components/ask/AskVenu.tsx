@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 import { ArrowUp, Database, Search, Sparkles } from "lucide-react";
 
@@ -32,11 +32,12 @@ type AskResponse = {
 const suggestions = [
   "Where has Venu used RAG?",
   "What was the NOVA grounding breakthrough?",
-  "What benchmarks were measured for NOVA?",
-  "Explain Venu's AI engineering trajectory.",
+  "How does EYWA voice AI work?",
+
 ];
 
 export default function AskVenu() {
+  const reduced = useReducedMotion();
   const [query, setQuery] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -138,7 +139,7 @@ export default function AskVenu() {
       <div className="ask-shell">
         <motion.div
           className="ask-header"
-          initial={{
+          initial={reduced ? false : {
             opacity: 0,
             y: 24,
           }}
@@ -171,7 +172,7 @@ export default function AskVenu() {
 
         <motion.div
           className="ask-terminal"
-          initial={{
+          initial={reduced ? false : {
             opacity: 0,
             y: 30,
           }}
@@ -192,7 +193,7 @@ export default function AskVenu() {
 
             <strong>
               <Database size={14} aria-hidden="true" />
-              ANSWERS WITH SUPPORTING EVIDENCE
+              PROJECTS & EXPERIENCE
             </strong>
           </div>
 
@@ -265,7 +266,7 @@ export default function AskVenu() {
                         ? "ask-message-user"
                         : "ask-message-assistant"
                     }`}
-                    initial={{
+                    initial={reduced ? false : {
                       opacity: 0,
                       y: 12,
                     }}
@@ -315,7 +316,7 @@ export default function AskVenu() {
                 {isLoading && (
                   <motion.div
                     className="ask-message ask-message-assistant"
-                    initial={{
+                    initial={reduced ? false : {
                       opacity: 0,
                     }}
                     animate={{
@@ -345,7 +346,7 @@ export default function AskVenu() {
                   id="ask-query"
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Ask about NOVA, benchmarks, RAG, or experience..."
+                  placeholder="Ask about projects or experience…"
                   aria-label="Ask Venu"
                   autoComplete="off"
                   maxLength={500}

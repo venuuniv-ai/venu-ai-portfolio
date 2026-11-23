@@ -256,3 +256,33 @@ button.evidence-fusion, button.evidence-output { background: transparent; color:
 .nova-ask-shortcuts > small { color: var(--muted); font-size: 11px; line-height: 1.7; }
 .nova-ask-shortcuts button { display: inline-flex; align-items: center; gap: 8px; background: #18201a; border: 1px solid var(--border); color: inherit; padding: 12px; border-radius: 10px; text-align: left; font: inherit; font-size: 12px; cursor: pointer; }
 @media (max-width: 500px) { .nova-replay-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } .nova-flow-detail { min-height: 0; } .nova-replay-actions { gap: 20px; } }
+
+/* Keep the first read concise; deeper evidence stays available on demand. */
+.project-disclosure { margin: -8px 0 48px; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+.project-disclosure > summary { cursor: pointer; padding: 22px 24px; font-size: 14px; }
+.project-disclosure > summary span { float: right; color: var(--muted); font-size: 12px; }
+.project-disclosure .nova-benchmarks { border: 0; border-top: 1px solid var(--border); border-radius: 0; margin: 0; }
+.project-measurements { margin-top: 24px; border-top: 1px solid var(--border); padding-top: 16px; }
+.project-measurements summary { cursor: pointer; color: var(--foreground); font-size: 13px; }
+.work-preview-copy .project-measurements p { min-height: 0; font-size: 12px; line-height: 1.8; }
+.project-section-label { margin: 44px 0 20px; color: var(--accent); font: 10px var(--mono); letter-spacing: .12em; }
+.work-preview { gap: 36px; }
+.work-preview-copy p { min-height: 0; }
+.work-preview-copy .section-index { margin-bottom: 20px; }
+.project-tags { gap: 8px; }
+.ask-header-meta, .ask-conversation-top { display: none; }
+.ask-terminal-bar { padding: 20px 24px; }
+.ask-terminal-bar strong { font-family: var(--sans), sans-serif; font-size: 11px; letter-spacing: .04em; }
+.ask-suggestion > span { display: none; }
+.ask-suggestion { padding: 14px 0; }
+.ask-suggestions { gap: 0; }
+.ask-empty { padding: 36px 24px; }
+.project-disclosure summary:focus-visible, .project-measurements summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
+@media (max-width: 700px) {
+  .project-disclosure > summary { padding: 20px 16px; line-height: 1.7; }
+  .project-disclosure > summary span { display: none; }
+  .work-preview { gap: 24px; }
+  .ask-terminal-bar strong { display: none; }
+}
+.ask-suggestion { grid-template-columns: minmax(0, 1fr); }
+.ask-suggestion p { margin: 0; }
