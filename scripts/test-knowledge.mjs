@@ -42,6 +42,16 @@ const cases = [
   assert.ok(guardQuery(query).allowed);
   console.log("PASS", query);
  }
+ for (const [query, expected] of [
+  ["What is EYWA and how does its voice pipeline work?", /Silero.*whisper\.cpp.*Piper/s],
+  ["What benchmarks and limitations were measured for EYWA?", /30\/30.*1,054\/1,287.*synthetic-fixture/s],
+  ["What is EWYA?", /EYWA.*Local Voice/is],
+ ]) {
+  const results = await search(query, 5);
+  assert.ok(results.length > 0 && results.every(result => result.projectId === "eywa"), query + ": incorrect project");
+  assert.match(answer(query, results), expected, query);
+  console.log("PASS", query);
+ }
  for (const query of ["What is Venu's multimodal experience at Qualcomm?", "Where did Venu work at Accenture?"]) {
   const results = await search(query, 5);
   assert.equal(results[0].source, "EXPERIENCE");

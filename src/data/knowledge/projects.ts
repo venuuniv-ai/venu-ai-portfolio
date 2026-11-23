@@ -1,5 +1,25 @@
 export const projects = [
   {
+    id: "eywa",
+    retrievalAliases: ["EYWA", "EWYA", "EYWA-VoiceAI"],
+    name: "EYWA — Local Voice AI",
+    type: "Independent AI Engineering Project",
+    status: "Local demo with bounded synthetic evaluation",
+    overview: "EYWA is an offline-first voice platform for an 8 GB Apple M2 with interruptible local conversations, verified fictional clinic appointments and audio-in/audio-out evaluation. Public repository: https://github.com/venuuniv-ai/EYWA-VoiceAI. It runs offline after dependency and model setup; this is a local demo, not a production clinic or telephone service.",
+    features: [
+      "Browser microphone, Silero VAD, whisper.cpp, llama.cpp and Piper form an interruptible local voice pipeline with playback-confirmed history.",
+      "Appointment actions require completed spoken read-back and explicit confirmation, followed by authorized, idempotent SQLite transactions.",
+      "React dashboard includes transcripts, stage timings, booking state, simulated phone controls and synthetic evaluation replay.",
+    ],
+    architecture: ["FastAPI and WebSocket PCM transport connect a React client to native Apple Silicon inference. Local Qwen supports conversation and constrained appointment extraction; SQLite state verifies committed actions. One concurrent call or evaluation is supported."],
+    stack: ["Python", "FastAPI", "React", "TypeScript", "Silero VAD", "whisper.cpp", "llama.cpp", "Qwen", "Piper", "SQLite"],
+    engineeringDecisions: [
+      { question: "What is EYWA and how does its voice pipeline work?", answer: "EYWA is a local voice platform on Apple M2: browser audio → Silero VAD → whisper.cpp → llama.cpp/Qwen → Piper → browser playback. It supports interruption and playback-confirmed history, with a fictional clinic workflow requiring read-back and explicit confirmation before authorized, idempotent SQLite writes. Source: https://github.com/venuuniv-ai/EYWA-VoiceAI." },
+      { question: "What benchmarks and limitations were measured for EYWA?", answer: "The final real-inference suite met 30/30 synthetic task expectations, with zero false confirmations across 19 outgoing success claims and zero duplicate booking writes. Voice-to-voice P50/P95 was 1,054/1,287 ms from speech-end to first audio receipt, not acoustic speaker latency. Mean known-script ASR WER was 19.62%; conservative backend/runner peak-RSS sum was 1.386 GB. These are compact-profile synthetic-fixture results, not arbitrary-caller accuracy or production-scale guarantees. One concurrent call, a fictional clinic and simulated telephone controls are supported; no real PSTN integration. Report: https://github.com/venuuniv-ai/EYWA-VoiceAI/blob/master/benchmarks/phase3/summary.md." },
+    ],
+    searchableTopics: ["EYWA", "EWYA", "Voice AI", "Offline-first", "Apple M2", "Speech", "ASR", "TTS", "Clinic booking", "Synthetic evaluation", "whisper.cpp", "llama.cpp", "Piper"],
+  },
+  {
     id: "nova",
     retrievalAliases: ["NOVA", "SELECTION_V1"],
     name: "NOVA — Local Personal AI Workspace",
