@@ -4,7 +4,7 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 
 import { motion, useReducedMotion } from "framer-motion";
 
-import { ArrowUp, Database, Search, Sparkles } from "lucide-react";
+import { ArrowUp, Search, Sparkles, RotateCcw } from "lucide-react";
 
 type SearchResult = {
   id: string;
@@ -191,10 +191,7 @@ export default function AskVenu() {
           <div className="ask-terminal-bar">
             <span>ASK VENU</span>
 
-            <strong>
-              <Database size={14} aria-hidden="true" />
-              PROJECTS & EXPERIENCE
-            </strong>
+            <button className="ask-reset" type="button" disabled={isLoading || (messages.length === 0 && !error)} onClick={() => { setMessages([]); setError(""); setQuery(""); inputRef.current?.focus({ preventScroll: true }); }}><RotateCcw size={14} aria-hidden="true" />Clear conversation</button>
           </div>
 
           <div className="ask-layout">
@@ -252,8 +249,7 @@ export default function AskVenu() {
                     </p>
 
                     <span>
-                      Answers are grounded in retrieved portfolio
-                      evidence.
+                      Choose a question or type your own. Supporting sources are included with each answer.
                     </span>
                   </div>
                 )}

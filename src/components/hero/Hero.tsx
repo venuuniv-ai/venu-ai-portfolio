@@ -27,7 +27,7 @@ export default function Hero() {
         <motion.div className="hero-intro" initial={{ opacity: 0, y: reduced ? 0 : 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduced ? 0 : 0.5 }}>
           <span className="section-index">AI / ML ENGINEER</span>
           <h1>Building <em>reliable</em><br />AI systems.</h1>
-          <p className="hero-summary">From retrieval and agents to multimodal learning and model serving. Exploring what it takes to turn model capability into dependable systems.</p>
+          <p className="hero-summary">I build AI that finds evidence, understands voice, and turns model output into useful workflows. Explore three projects, the engineering decisions, and what was actually measured.</p>
           <div className="hero-buttons"><a className="primary-button" href="#work">Explore my work <ArrowUpRight size={17} aria-hidden="true" /></a><a className="secondary-button" href="/resume/VenuMadhav_Resume.pdf" target="_blank" rel="noopener noreferrer">View resume <ArrowUpRight size={17} aria-hidden="true" /></a></div>
           <nav className="hero-domains" aria-label="Explore engineering domains">{focusAreas.map(({ label, href }) => <a key={href} href={href} onClick={(event) => { event.preventDefault(); navigateToSection(href); }}>{label}<ArrowUpRight size={12} aria-hidden="true" /></a>)}</nav>
         </motion.div>

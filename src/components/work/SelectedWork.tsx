@@ -1,13 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import EvidenceDiagram from "./EvidenceDiagram";
 import NovaFlow from "./NovaFlow";
 import NovaBenchmarks from "./NovaBenchmarks";
 import EywaProject from "./EywaProject";
+import { preparePortfolioQuestion } from "@/lib/askNavigation";
 import { navigateToSection } from "@/components/hero/Hero";
+
+const projectChoices = [
+  { id: "nova", name: "NOVA", category: "Personal AI", description: "Memory, grounded answers, and human review.", question: "What is NOVA and what is its architecture?" },
+  { id: "eywa", name: "EYWA", category: "Voice AI", description: "Local conversations and confirmed actions.", question: "What is EYWA and how does its voice pipeline work?" },
+  { id: "multimodal", name: "MultimodalAI", category: "Retrieval & inference", description: "Text and image evidence, brought together.", question: "How does the Multimodal Agentic RAG platform combine text and visual retrieval?" },
+];
 
 const views = [
   { label: "Overview", title: "Multimodal Agentic RAG", copy: "A retrieval platform that brings text and image evidence together before generating grounded answers. Evaluated on a frozen 203-case benchmark; results measure retrieval and literal completeness, not semantic accuracy or production-scale reliability.", tech: ["98.73% Recall@5", "96.82% literal answer completeness", "10/10 cross-document completeness"], href: "#systems", action: "Explore the architecture" },
@@ -18,11 +25,29 @@ const views = [
 
 export default function SelectedWork() {
   const [active, setActive] = useState(0);
+  const [project, setProject] = useState("nova");
+  useEffect(() => {
+    function revealProject() {
+      const id = window.location.hash.slice(1);
+      if (!projectChoices.some(choice => choice.id === id)) return;
+      setProject(id);
+      window.requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView({ block: "start", behavior: "instant" }));
+    }
+    revealProject();
+    window.addEventListener("hashchange", revealProject);
+    return () => window.removeEventListener("hashchange", revealProject);
+  }, []);
   const reduced = useReducedMotion();
   const view = views[active];
   return (
     <section className="work-section" id="work">
       <div className="editorial-heading"><div><span className="section-index">SELECTED WORK</span><h2>Selected work, <em>explored.</em></h2></div><p>Personal AI, local voice, and grounded retrieval.<br />Explore the systems and the evidence behind them.</p></div>
+      <div className="project-picker" role="group" aria-label="Choose a project">
+        {projectChoices.map((choice, index) => <button key={choice.id} type="button" aria-pressed={project === choice.id} aria-controls={`project-panel-${choice.id}`} onClick={() => { setProject(choice.id); window.history.replaceState(null, "", `#${choice.id}`); }}>
+          <span className="project-picker-category">0{index + 1} / {choice.category}</span><strong>{choice.name}</strong><span>{choice.description}</span><span className="project-picker-action">{project === choice.id ? "Currently exploring" : "Explore project"}<ArrowUpRight size={15} aria-hidden="true" /></span>
+        </button>)}
+      </div>
+      <div className="project-panel" id="project-panel-nova" hidden={project !== "nova"}>
       <article className="work-preview nova-project" id="nova" aria-labelledby="nova-title">
         <NovaFlow interactive />
         <div className="work-preview-copy">
@@ -37,10 +62,15 @@ export default function SelectedWork() {
         </div>
       </article>
       <details className="project-disclosure"><summary>NOVA · Benchmarks & interactive replay<span>Explore the evidence</span></summary><NovaBenchmarks /></details>
-      <EywaProject />
+      </div>
+      <div className="project-panel" id="project-panel-eywa" hidden={project !== "eywa"}><EywaProject /></div>
+      <div className="project-panel" id="project-panel-multimodal" hidden={project !== "multimodal"}>
+      <div id="multimodal" />
       <div className="project-section-label">MULTIMODALAI · RETRIEVAL PLATFORM</div>
       <div className="work-filters" role="group" aria-label="Project perspectives">{views.map((item, index) => <button key={item.label} type="button" aria-pressed={index === active} onClick={() => setActive(index)}>{item.label}</button>)}</div>
       <div className="work-preview"><EvidenceDiagram interactive /><div className="work-preview-copy"><AnimatePresence mode="wait" initial={false}><motion.div key={view.label} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduced ? 0 : 0.15 }}><h3>{view.title}</h3><p>{view.copy}</p><div className="project-tags">{view.tech.map((tag) => <span key={tag}>{tag}</span>)}</div><a className="primary-button" href={view.href} onClick={(event) => { event.preventDefault(); navigateToSection(view.href); }}>{view.action}<ArrowUpRight size={16} aria-hidden="true" /></a></motion.div></AnimatePresence><details className="project-measurements"><summary>Benchmark details & limits</summary><p>Frozen benchmark: 203 cases. Recall@5: 83.44% → 98.73%. Measured literal answer completeness: 80.89% → 96.82%. Cross-document completeness: 0/10 → 10/10. Attack-canary emissions: 15/25 → 0/25 (extractive), 5/25 → 0/25 (Ollama). Unavailable-fact refusals: 35/35. Extractive HTTP requests: 512/512 successful. Finite test results, not semantic accuracy, complete attack resistance or production-scale guarantees.</p></details><a className="work-demo-link" href="#lab">Architecture & interactive demos <ArrowUpRight size={15} aria-hidden="true" /></a></div></div>
+      </div>
+      <div className="project-next-step"><p>Want the short version or a deeper explanation?</p><button className="secondary-button" type="button" onClick={() => preparePortfolioQuestion(projectChoices.find(choice => choice.id === project)!.question)}>Ask about {projectChoices.find(choice => choice.id === project)!.name}<ArrowUpRight size={16} aria-hidden="true" /></button></div>
     </section>
   );
 }
